@@ -1,34 +1,30 @@
-import React from 'react';
+
+import React from 'react'
 import { v4 } from 'uuid';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import ReusableForm from './ReusableForm';
 
-function NewMerchForm(props){
-
+function NewMerchForm(props) {
   function handleNewMerchFormSubmission(event) {
     event.preventDefault();
-    console.log(event.target.value);
-    props.onNewMerchCreation({
-      item: event.target.item.value,     
-      size: event.target.size.value, 
-      color: event.target.color.value, 
-      price: parseInt(event.target.price.value), 
-      quantity: parseInt(event.target.quantity.value), 
-      id: v4()});
-    console.log(event.target.item.value);
+    props.onNewMerchCreation({brand: event.target.brand.value, name: event.target.name.value, color: event.target.color.value, price: event.target.price.value, size: event.target.size.value, items: parseInt(event.target.items.value), id: v4()});
   }
 
   return (
     <React.Fragment>
-      <ReusableForm
-        buttonText="Add new Merch" 
-        formSubmissionHandler={handleNewMerchFormSubmission} />
+      <div className="card bodyFont p-4 x-50 mx-auto" style={{backgroundColor: "white"}}>
+        <h1 className="headingFont" style={{color: "black"}}>Add New Merch Items</h1>
+        <hr />
+        <ReusableForm 
+          formSubmissionHandler={handleNewMerchFormSubmission}
+          buttonText='Add Merch!' />
+      </div>
     </React.Fragment>
-  );
+  )
 }
 
 NewMerchForm.propTypes = {
   onNewMerchCreation: PropTypes.func
 }
 
-export default NewMerchForm;
+export default NewMerchForm

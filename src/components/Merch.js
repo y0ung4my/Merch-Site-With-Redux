@@ -1,28 +1,33 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-function Merch(props){
+
+function Merch(props) {
+  const stockCheck = props.items === 0 ? "Out of Stock" : props.items;
+  
   return (
     <React.Fragment>
-      <div onClick = {() => props.whenMerchClicked(props.id)}>
-        <h3>{props.size} - {props.item}</h3>
-        <h5>{props.color}</h5>
-        <h5> X {props.quantity}</h5>
-        <p><em> $ {props.price}</em></p>
-        <hr/>
+      <div onClick= {() => props.whenMerchClicked(props.id)}>
+        <h3>{props.brand} - {props.name}</h3>
+        <p>Color: {props.color}</p>
+        <p>Price: ${props.price}</p>
+        <p>Size: {props.size}</p>
+        <p>Items available: {stockCheck}</p>
+        <hr />
       </div>
     </React.Fragment>
   );
 }
 
 Merch.propTypes = {
-  item: PropTypes.string.isRequired,
-  size: PropTypes.string.isRequired,
+  brand: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  quantity: PropTypes.number.isRequired,
-  price: PropTypes.number,
+  price: PropTypes.number.isRequired,
+  size: PropTypes.string.isRequired,
+  items: PropTypes.number.isRequired,  
   id: PropTypes.string,
   whenMerchClicked: PropTypes.func
-};
+}
 
 export default Merch;
