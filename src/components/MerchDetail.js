@@ -5,7 +5,7 @@ function MerchDetail(props) {
   const { merch, onClickingDelete, onClickingIncrease, onClickingDecrease } = props;
   const items = merch.items === 0 ? "Out of Stock" : merch.items;
 
-  const buyButton = merch.items === 0 ? <p></p> : <button onClick={() => onClickingDecrease(merch.id)}>Buy</button>
+  const buyButton = merch.items === 0 ? <p></p> : <button onClick={() => onClickingDecrease(merch)}>Buy</button>
   return (
     <React.Fragment>
       <div className="card shadow-lg w-75 mx-auto" style={{fontSize: 24, color: "black"}}>
@@ -26,7 +26,7 @@ function MerchDetail(props) {
           <br/>
             <button onClick={props.onClickingEdit} className="btn shadow mr-2 updateBtn">Update Merch</button>
             <button onClick={() => onClickingDelete(merch.id)} className="btn shadow deleteBtn">Delete Merch</button>
-            <button onClick={() => onClickingIncrease(merch.id)} className="btn shadow deleteBtn">Restock</button>
+            <button onClick={() => onClickingIncrease(merch)} className="btn shadow deleteBtn">Restock</button>
           </div>
         </div>
     </React.Fragment>

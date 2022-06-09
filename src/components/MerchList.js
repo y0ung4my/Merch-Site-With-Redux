@@ -10,7 +10,7 @@ function MerchList(props) {
       <hr />
       <div className="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3">
       
-      {props.merchList.map((merch) => 
+      {Object.values(props.merchList).map((merch) => 
         <div class="col mb-4">
           <div className= "card shadow-lg h-100 text-left" style={{backgroundColor: "#add8e6"}}>
             <Merch
@@ -32,7 +32,7 @@ function MerchList(props) {
 }
 
 MerchList.propTypes = {
-  merchList: PropTypes.array,
+  merchList: PropTypes.object,
   onMerchSelection: PropTypes.func
 };
 

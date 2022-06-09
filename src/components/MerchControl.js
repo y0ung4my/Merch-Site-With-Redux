@@ -5,6 +5,9 @@ import MerchList from './MerchList';
 import MerchDetail from './MerchDetail';
 import EditMerchForm from './EditMerchForm';
 import MerchData from './MerchData';
+import PropTypes from "prop-types";
+import { connect } from 'react-redux';
+
 
 class MerchControl extends React.Component {
 
@@ -12,7 +15,6 @@ class MerchControl extends React.Component {
     super(props);
     this.state = {
       formVisibleOnPage: false,
-      mainMerchList: MerchData,
       selectedMerch: null,
       editing: false
     };
@@ -33,78 +35,103 @@ class MerchControl extends React.Component {
   }
 
   handleAddingNewMerchToList = (newMerch) => {
-    const newMainMerchList = this.state.mainMerchList.concat(newMerch);
-    this.setState({
-      mainMerchList: newMainMerchList,
-      formVisibleOnPage: false
-    });
+    const {dispatch} = this.props;  
+    const { id, name, brand, color, price, size, items }=newMerch; 
+    const action ={ 
+      type: 'ADD_MERCH', 
+      id: id, 
+      name: name, 
+      brand: brand, 
+      color: color, 
+      price: price, 
+      size: size, 
+      items: items,
+    }
+    dispatch(action); 
+    this.setState({formVisibleOnPage: false});
   }
+  
 
   handleChangingSelectedMerch = (id) => {
-    const selectedMerch =this.state.mainMerchList.filter(merch => merch.id === id)[0];
+    const selectedMerch =this.props.mainMerchList[id];
     this.setState({selectedMerch: selectedMerch});
   }
 
   handleDeletingMerch = (id) => {
-    const newMainMerchList = this.state.mainMerchList.filter(merch => merch.id !== id);
-    this.setState({
-      mainMerchList: newMainMerchList,
-      selectedMerch: null
-    });
+    const {dispatch}= this.props; 
+    const action={ 
+      type: 'DELETE_MERCH', 
+      id: id
+    }
+    dispatch(action);
+    this.setState({selectedMerch: null});
   }
+  
 
   handleEditClick = () => {
     this.setState({editing:true});
   }
 
   handleEditingMerchInList = (merchToEdit) => {
-    const editedMainMerchList = this.state.mainMerchList
-      .filter(merch => merch.id !== this.state.selectedMerch.id)
-      .concat(merchToEdit);
+    const { dispatch } = this.props;
+    const { id, name, brand, color, price, size, items } = merchToEdit;
+    const action = {
+      type: 'ADD_MERCH',
+      id: id, 
+      name:  name, 
+      brand: brand, 
+      color: color, 
+      price: price, 
+      size: size, 
+      items: items,     
+    }
+    dispatch(action);
     this.setState({
-      mainMerchList: editedMainMerchList,
       editing: false,
-      selectedMerch: null
     });
   }
 
-  handleIncreasingMerchStock = (id) => {
-    // if(this.state.mainMerchList > 1) {
-      const selectedMerch = this.state.mainMerchList.filter(merch => merch.id === id)[0]
-      selectedMerch.items++;
-      console.log("Current item: " + this.state.mainMerchList.concat(selectedMerch));
-      const newMainMerchList = this.state.mainMerchList.filter(merch => merch.id !==id).concat(selectedMerch);
-      this.setState({mainMerchList:newMainMerchList});
-    // } else {
-    //   const selectedMerch = this.state.mainMerchList.filter(merch => merch.id === id)[0]
-    //   selectedMerch.items++;
-    //   console.log("We in the else");
-    //   const newMerchListArray = this.state.mainMerchList;
-    //   const changedMerchArray = newMerchListArray.concat(selectedMerch);
-    //   this.setState({
-    //     mainMerchList: changedMerchArray
-    //   });
-    //}
-  }
 
-  handleDecreasingMerchStock = (id) => {
-    const selectedMerch = this.state.mainMerchList.filter(merch => merch.id === id)[0]
-    //  if(selectedMerch.items > 1) 
-    {
-      selectedMerch.items--;
-      const newMainMerchList = this.state.mainMerchList.filter(merch => merch.id !==id).concat(selectedMerch);
-      this.setState({mainMerchList:newMainMerchList});
-    } 
-    // else {
-    //   const selectedMerch = this.state.mainMerchList.filter(merch => merch.id === id)[0]
-    //   selectedMerch.items--;
-    //   const newMerchListArray = this.state.mainMerchList;
-    //   const changedMerchArray = newMerchListArray.concat(selectedMerch);
-    //   this.setState({
-    //     mainMerchList: changedMerchArray,
-    //   });
-    // }
-  }
+  handleIncreasingMerchStock = (merchToIncrease) => {
+    const { dispatch } = this.props;
+    const { id, name, brand, color, price, size, items } = merchToIncrease;
+    merchToIncrease.items++
+    const action = {
+      type: 'ADD_MERCH',
+      id: id, 
+      name:  name, 
+      brand: brand, 
+      color: color, 
+      price: price, 
+      size: size, 
+      items: items,     
+    }
+    dispatch(action);
+    this.setState({
+      formVisibleOnPage: false,
+    });
+    }
+
+
+    handleDecreasingMerchStock = (merchToDecrease) => {
+      const { dispatch } = this.props;
+      const { id, name, brand, color, price, size, items } = merchToDecrease;
+      merchToDecrease.items--;
+      const action = {
+        type: 'ADD_MERCH',
+        id: id, 
+        name:  name, 
+        brand: brand, 
+        color: color, 
+        price: price, 
+        size: size, 
+        items: items,     
+      }
+      dispatch(action);
+      this.setState({
+        formVisibleOnPage: false,
+      });
+      }
 
   render() {
     let currentlyVisibleState = null;
@@ -112,6 +139,7 @@ class MerchControl extends React.Component {
     if (this.state.editing) {
       currentlyVisibleState = <EditMerchForm merch = {this.state.selectedMerch} onEditMerch = {this.handleEditingMerchInList}/>
       buttonText = "Return to Merch List";
+
     } else if(this.state.selectedMerch != null) {
       currentlyVisibleState = <MerchDetail 
         merch={this.state.selectedMerch}
@@ -120,11 +148,13 @@ class MerchControl extends React.Component {
         onClickingDelete={this.handleDeletingMerch}
         onClickingEdit={this.handleEditClick} />
       buttonText= "Return to Merch List";
+
     } else if (this.state.formVisibleOnPage) {
       currentlyVisibleState = <NewMerchForm onNewMerchCreation={this.handleAddingNewMerchToList}/>
       buttonText = "Return to Merch List";
+
     } else {
-      currentlyVisibleState = <MerchList merchList={this.state.mainMerchList} onMerchSelection = {this.handleChangingSelectedMerch}/>
+      currentlyVisibleState = <MerchList merchList={this.props.mainMerchList} onMerchSelection = {this.handleChangingSelectedMerch}/>
       buttonText = "Add Merch";
     }
 
@@ -136,5 +166,17 @@ class MerchControl extends React.Component {
     );
   }
 }
+
+MerchControl.propTypes = {
+  mainMerchList: PropTypes.object
+};
+
+const mapStateToProps = state => {
+  return {
+    mainMerchList: state
+  }
+}
+
+MerchControl = connect(mapStateToProps)(MerchControl);
 
 export default MerchControl;
